@@ -7,6 +7,7 @@
   // seem very useful, but remember it--if a function needs to provide an
   // iterator when the user does not pass one in, this will be handy.
   _.identity = function(val) {
+    return val
   };
 
   /**
@@ -34,10 +35,20 @@
     return n === undefined ? array[0] : array.slice(0, n);
   };
 
+
   // Like first, but for the last elements. If n is undefined, return just the
   // last element.
   _.last = function(array, n) {
+    if (n === 0) {
+      return []
+    };
+
+    if (n > array.length) {
+      return array
+    }
+    return n === undefined ? array[array.length-1] : array.slice(n-1, array.length);
   };
+
 
   // Call iterator(value, key, collection) for each element of collection.
   // Accepts both arrays and objects.
@@ -46,6 +57,7 @@
   // iterator function over each item in the input collection.
   _.each = function(collection, iterator) {
   };
+
 
   // Returns the index at which value can be found in the array, or -1 if value
   // is not present in the array.
