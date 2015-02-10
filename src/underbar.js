@@ -52,10 +52,23 @@
 
   // Call iterator(value, key, collection) for each element of collection.
   // Accepts both arrays and objects.
-  //
   // Note: _.each does not have a return value, but rather simply runs the
   // iterator function over each item in the input collection.
+
   _.each = function(collection, iterator) {
+    var isAnArray = Array.isArray(collection);
+
+    if (isAnArray == true) {
+      for (var index = 0; index < collection.length; index++) {
+        var element = collection[index];
+        iterator(element, index, collection);
+      }
+    } else {
+      for (var key in collection) {
+        var value = collection[key];
+        iterator(value, key, collection);
+      }
+    }
   };
 
 
@@ -78,24 +91,69 @@
 
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, test) {
+    var trueReturns = []
+
+    for (var index = 0; index < collection.length; index++) {
+      var current = collection[index];
+      if (test(current) === true) {
+        trueReturns.push(current)
+      } 
+    }
+    return trueReturns;
   };
 
+
   // Return all elements of an array that don't pass a truth test.
+  // TIP: see if you can re-use _.filter() here, without simply copying code in and modifying it
   _.reject = function(collection, test) {
-    // TIP: see if you can re-use _.filter() here, without simply
-    // copying code in and modifying it
+    var rejected = []
+
+    for (var index = 0; index < collection.length; index++) {
+      var current = collection[index];
+      if (test(current) === false) {
+        rejected.push(current)
+      } 
+    }
+    return rejected;
   };
+
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
+    var duplicateFree = [];
+
+
+    for (var index = 0; index < array.length; index++) {
+      var hasIt = false
+      for (var dupIndex = 0; dupIndex < duplicateFree.length; dupIndex++) {
+        if (duplicateFree[dupIndex] === array[index]) {
+          hasIt = true;
+        }
+      }
+
+      if (hasIt === false) {
+        duplicateFree.push(array[index]);
+      }
+    };
+
+    return duplicateFree
   };
 
 
   // Return the results of applying an iterator to each element.
-  _.map = function(collection, iterator) {
     // map() is a useful primitive iteration function that works a lot
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
+
+  _.map = function(collection, iterator) {
+    var newArray = []
+
+    for (var index = 0; index < collection.length; index++) {
+      var current = collection[index]
+      var result = iterator(current)
+      newArray.push(result);
+    }
+    return newArray
   };
 
   /*
@@ -103,6 +161,8 @@
    * values into a new array of values. _.pluck() is solved for you
    * as an example of this.
    */
+
+
 
   // Takes an array of objects and returns and array of the values of
   // a certain property in it. E.g. take an array of people and return
@@ -136,8 +196,26 @@
   //     return total + number * number;
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
+
   _.reduce = function(collection, iterator, accumulator) {
+
+    if (accumulator === undefined) {
+      accumulator = collection[0];
+
+      for (var index = 1; index < collection.length; index++) {
+        var item = collection[index];
+        accumulator = iterator(accumulator, item);
+      }
+    } else {
+       for (var index = 0; index < collection.length; index++) {
+        accumulator = iterator(accumulator, collection[index]);
+      }  
+    }
+    return accumulator
   };
+
+
+
 
   // Determine if the array or object contains a given value (using `===`).
   _.contains = function(collection, target) {
