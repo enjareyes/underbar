@@ -249,45 +249,64 @@
   // Determine whether all of the elements match a truth test.
     // TIP: Try re-using reduce() here.
   _.every = function(collection, iterator) {
-    console.log('*********************');
+
+    // console.log('*********************');
 
     if (collection.length === 0) {
       return true;
     }
 
-    console.log('ITERATOR - ' + iterator);
+    // console.log('ITERATOR - ' + iterator);
 
     return _.reduce(collection, function(preValue, item){
 
-      console.log('preValue - ' + preValue);
-      console.log('item - ' + item);
-      console.log('iterator(item): ' + iterator(item));
+      // console.log('preValue - ' + preValue);
+      // console.log('item - ' + item);
+      // console.log('iterator(item): ' + iterator(item));
 
       if (preValue) {
-        // conditional to check for existence of item - if yes, then do current code; if item does not exist, do code yet to be written
-        if (item) {
-          return true;
-        } else {
-          return false;
-        }
+        if (typeof item != undefined) { 
+          // conditional to check for existence of item - 
+          //if yes, then do current code; if item does not exist, do code yet to be written
+          if (item) {
+            return true;
+          } else {
+            return false;
+          }
+        } 
       } 
 
       return false;
     })
+
+
   };
 
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
-  _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
+  _.some = function(collection, iterator) {    
+    if (iterator == undefined) {
+      iterator = function(current, index, array) {
+        return current % 2 === 0;
+      }
+    }
+
+    if (collection.length === 0) {
+      return false;
+    }
+
+
+
+
+
   };
 
 
   /**
    * OBJECTS
    * =======
-   *
    * In this section, we'll look at a couple of helpers for merging objects.
    */
 
@@ -302,12 +321,43 @@
   //   }, {
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
-  _.extend = function(obj) {
+
+  _.extend = function(obj, extension) {
+    var extensionObjects = [];
+
+    for (var how_many = 1; how_many<arguments.length; how_many++) {
+      extensionObjects.push(arguments[how_many])
+    }
+
+    for (var index=0; index < extensionObjects.length; index++) {
+      var currentObject = extensionObjects[index]
+      for (var key in currentObject) {
+        obj[key] = currentObject[key];
+      }
+    }
+    return obj
+
   };
+
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
-  _.defaults = function(obj) {
+  _.defaults = function(obj, extension) {
+    var extensionObjects = [];
+
+    for (var how_many = 1; how_many<arguments.length; how_many++) {
+      extensionObjects.push(arguments[how_many])
+    }
+
+    for (var index=0; index < extensionObjects.length; index++) {
+      var currentObject = extensionObjects[index]
+      for (var key in currentObject) {
+        if (obj.hasOwnProperty(key) === false) {
+          obj[key] = currentObject[key];
+        }
+      }
+    }
+    return obj
   };
 
 
@@ -321,10 +371,10 @@
 
   // Return a function that can be called at most one time. Subsequent calls
   // should return the previously returned value.
-  _.once = function(func) {
     // TIP: These variables are stored in a "closure scope" (worth researching),
     // so that they'll remain available to the newly-generated function every
     // time it's called.
+  _.once = function(func) {
     var alreadyCalled = false;
     var result;
 
