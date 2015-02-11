@@ -218,22 +218,64 @@
 
 
   // Determine if the array or object contains a given value (using `===`).
-  _.contains = function(collection, target) {
     // TIP: Many iteration problems can be most easily expressed in
     // terms of reduce(). Here's a freebie to demonstrate!
-    return _.reduce(collection, function(wasFound, item) {
-      if (wasFound) {
-        return true;
-      }
-      return item === target;
-    }, false);
+
+  _.contains = function(collection, target) {
+    var isAnArray = Array.isArray(collection);
+
+    if (isAnArray === true) {
+      return _.reduce(collection, function(wasFound, item) {
+        if (wasFound) {
+          return true;
+        }
+        return item === target;
+      }, false);
+    } else {
+      // for (var key in collection) {
+      //   if (collection[key] === target) {
+      //     return true;
+      //   }
+      // }
+      return _.reduce(Object.keys(collection), function(wasFound, key) {
+        if (collection[key]) {
+          return true;
+        } 
+      }, false);   
+    };
   };
 
 
   // Determine whether all of the elements match a truth test.
-  _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
+  _.every = function(collection, iterator) {
+    console.log('*********************');
+
+    if (collection.length === 0) {
+      return true;
+    }
+
+    console.log('ITERATOR - ' + iterator);
+
+    return _.reduce(collection, function(preValue, item){
+
+      console.log('preValue - ' + preValue);
+      console.log('item - ' + item);
+      console.log('iterator(item): ' + iterator(item));
+
+      if (preValue) {
+        // conditional to check for existence of item - if yes, then do current code; if item does not exist, do code yet to be written
+        if (item) {
+          return true;
+        } else {
+          return false;
+        }
+      } 
+
+      return false;
+    })
   };
+
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
