@@ -198,9 +198,12 @@
   //          No accumulator is given so the first element is used.
 
   _.reduce = function(collection, iterator, accumulator) {
+     if (collection.length == 1) {
+        return _.identity(collection[0]);
+      }
 
     if (accumulator === undefined) {
-      accumulator = collection[0];
+      var accumulator = collection[0];
 
       for (var index = 1; index < collection.length; index++) {
         var item = collection[index];
@@ -248,60 +251,50 @@
 
   // Determine whether all of the elements match a truth test.
     // TIP: Try re-using reduce() here.
-  _.every = function(collection, iterator) {
+  _.every = function(collection, func) {
+    if (!func) {
+      func = _.identity
+    };
 
-    // console.log('*********************');
+    var pass = true;
 
-    if (collection.length === 0) {
-      return true;
-    }
+    _.each(collection, function(item) { 
+      if (!func(item)) {
+        pass = false;
+      }
+    });
 
-    // console.log('ITERATOR - ' + iterator);
-
-    return _.reduce(collection, function(preValue, item){
-
-      // console.log('preValue - ' + preValue);
-      // console.log('item - ' + item);
-      // console.log('iterator(item): ' + iterator(item));
-
-      if (preValue) {
-        if (typeof item != undefined) { 
-          // conditional to check for existence of item - 
-          //if yes, then do current code; if item does not exist, do code yet to be written
-          if (item) {
-            return true;
-          } else {
-            return false;
-          }
-        } 
-      } 
-
-      return false;
-    })
-
-
-  };
+  return pass;
+};
 
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
     // TIP: There's a very clever way to re-use every() here.
-  _.some = function(collection, iterator) {    
-    if (iterator == undefined) {
-      iterator = function(current, index, array) {
-        return current % 2 === 0;
+  _.some = function(collection, iterator) {   
+    var pass = false;
+    
+    if (!iterator) {
+      iterator = _.identity
+    }
+    
+    // _.each(collection, function(item) {
+    //   if (iterator(item)) {
+    //     pass = true;
+    //   }
+    // })
+    // return pass
+
+    _.every(collection, function(item) {
+      if (iterator(item)) {
+        pass = true
       }
-    }
+      return pass;
+    })
 
-    if (collection.length === 0) {
-      return false;
-    }
+    return pass
+  }
 
-
-
-
-
-  };
 
 
   /**
@@ -392,6 +385,7 @@
     };
   };
 
+
   // Memorize an expensive function's results by storing them. You may assume
   // that the function takes only one argument and that it is a primitive.
   // memoize could be renamed to oncePerUniqueArgumentList; memoize does the
@@ -401,7 +395,18 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    var infoHolder = {};
+    
+    if (infoHolder.hasOwnProperty(func)) {
+      return infoHolder[func]
+    } else {
+      var result = func()
+      infoHolder[func] = result
+    }
+
+
   };
+
 
   // Delays a function for the given number of milliseconds, and then calls
   // it with the arguments supplied.
@@ -409,7 +414,20 @@
   // The arguments for the original function are passed after the wait
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
-  _.delay = function(func, wait) {
+
+  _.delay = function(func, wait, funcArgs) {
+    //var args = [];
+
+    //console.log(args)
+    // for (var index = 2; index < arguments.length; index++) {
+    //   args.push(arguments[index]);
+    // }
+
+    var callingIt = function() {
+      func(funcArgs);
+    }
+
+    return setTimeout(callingIt, wait);
   };
 
 
@@ -424,6 +442,41 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    var newArray = array;
+
+    var firstHalf = []
+    var secondHalf = []
+
+    for (var index = 0; index< newArray.length; index++) {
+      if (index % 2 === 0) {
+        firstHalf.push(newArray[index]) 
+      } else {
+        secondHalf.push(newArray[index])
+      }
+    }
+
+    newArray = []
+
+    for (var i = 0; i < firstHalf.length; i++) {
+      if (i%2==0) {
+        var x = firstHalf[i];
+        newArray.unshift(x)
+      } else {
+        var x = firstHalf[i];
+        newArray.push(x);
+      }
+    }
+
+    for (var idx = 0; idx < secondHalf.length; idx++) {
+      if (idx%2==0) {
+        var x = secondHalf[idx];
+        newArray.unshift(x)
+      } else {
+        var x = secondHalf[idx];
+        newArray.push(x);
+      }
+    }
+      return newArray;
   };
 
 
