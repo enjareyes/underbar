@@ -395,15 +395,25 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
-    var infoHolder = {};
-    
-    if (infoHolder.hasOwnProperty(func)) {
-      return infoHolder[func]
-    } else {
-      var result = func()
-      infoHolder[func] = result
-    }
 
+    console.log('***********************')
+    var previouslyRun = [];
+    var slice = Array.prototype.slice;
+
+    return function() {
+      var args = slice.call(arguments);
+      console.log('args = ' + args)
+      var result;
+    
+      if (previouslyRun[args]) {
+        return previouslyRun.args;
+      } else {
+        result = func.apply(this, arguments);
+        previouslyRun[args]=result;
+      }
+
+      return result;
+    }
 
   };
 
@@ -416,18 +426,15 @@
   // call someFunction('a', 'b') after 500ms
 
   _.delay = function(func, wait, funcArgs) {
-    //var args = [];
-
-    //console.log(args)
-    // for (var index = 2; index < arguments.length; index++) {
-    //   args.push(arguments[index]);
-    // }
+    var slice = Array.prototype.slice;
+    var args = slice.call(arguments).slice("2");
+    //above: extracts the funcArgs by duplicating arguments in an array and slicing to remove the func and wait
 
     var callingIt = function() {
-      func(funcArgs);
+      return func.apply(this, args);
     }
 
-    return setTimeout(callingIt, wait);
+    setTimeout(callingIt, wait);
   };
 
 
