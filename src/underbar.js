@@ -396,13 +396,11 @@
   // instead if possible.
   _.memoize = function(func) {
 
-    console.log('***********************')
     var previouslyRun = [];
     var slice = Array.prototype.slice;
 
     return function() {
       var args = slice.call(arguments);
-      console.log('args = ' + args)
       var result;
     
       if (previouslyRun[args]) {
@@ -448,6 +446,7 @@
   // TIP: This function's test suite will ask that you not modify the original
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
+  
   _.shuffle = function(array) {
     var newArray = array;
 
