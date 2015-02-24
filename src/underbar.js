@@ -120,23 +120,23 @@
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
-    var duplicateFree = [];
+   var duplicateFree = [];
 
 
-    for (var index = 0; index < array.length; index++) {
-      var hasIt = false
-      for (var dupIndex = 0; dupIndex < duplicateFree.length; dupIndex++) {
-        if (duplicateFree[dupIndex] === array[index]) {
-          hasIt = true;
-        }
-      }
+   for (var index = 0; index < array.length; index++) {
+     var hasIt = false
+     for (var dupIndex = 0; dupIndex < duplicateFree.length; dupIndex++) {
+       if (duplicateFree[dupIndex] === array[index]) {
+         hasIt = true;
+       }
+     }
 
-      if (hasIt === false) {
-        duplicateFree.push(array[index]);
-      }
-    };
+     if (hasIt === false) {
+       duplicateFree.push(array[index]);
+     }
+   };
 
-    return duplicateFree
+   return duplicateFree
   };
 
 
@@ -146,14 +146,14 @@
     // the members, it also maintains an array of results.
 
   _.map = function(collection, iterator) {
-    var newArray = []
+     var newArray = []
 
-    for (var index = 0; index < collection.length; index++) {
-      var current = collection[index]
-      var result = iterator(current)
-      newArray.push(result);
-    }
-    return newArray
+     for (var index = 0; index < collection.length; index++) {
+       var current = collection[index]
+       var result = iterator(current)
+       newArray.push(result);
+     }
+     return newArray
   };
 
   /*
@@ -315,22 +315,22 @@
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
 
-  _.extend = function(obj, extension) {
-    var extensionObjects = [];
+ _.extend = function(obj) {
+   var extensionObjects = [];
 
-    for (var how_many = 1; how_many<arguments.length; how_many++) {
-      extensionObjects.push(arguments[how_many])
-    }
+   for (var how_many = 1; how_many<arguments.length; how_many++) {
+     extensionObjects.push(arguments[how_many])
+   }
 
-    for (var index=0; index < extensionObjects.length; index++) {
-      var currentObject = extensionObjects[index]
-      for (var key in currentObject) {
-        obj[key] = currentObject[key];
-      }
-    }
-    return obj
+   for (var index=0; index < extensionObjects.length; index++) {
+     var currentObject = extensionObjects[index]
+     for (var key in currentObject) {
+       obj[key] = currentObject[key];
+     }
+   }
+   return obj
+ };
 
-  };
 
 
   // Like extend, but doesn't ever overwrite a key that already
@@ -486,18 +486,34 @@
   };
 
 
-  /**
+  /*
    * EXTRA CREDIT
    * =================
-   *
    * Note: This is the end of the pre-course curriculum. Feel free to continue,
    * but nothing beyond here is required.
    */
 
+
   // Calls the method named by functionOrKey on each value in the list.
   // Note: You will need to learn a bit about .apply to complete this.
   _.invoke = function(collection, functionOrKey, args) {
+    var results= [];
+
+    // if (typeof functionOrKey === 'string') {
+
+    // };
+
+    if (typeof functionOrKey === 'function'){
+      for (var index=0; index < collection.length; index++) {
+        var currentResult = functionOrKey.apply(collection[index])
+        results.push(currentResult);
+      }
+    }
+
+    return results;
   };
+
+
 
   // Sort the object's values by a criterion produced by an iterator.
   // If iterator is a string, sort objects by that property with the name
@@ -506,13 +522,54 @@
   _.sortBy = function(collection, iterator) {
   };
 
+
+
   // Zip together two or more arrays with elements of the same index
   // going together.
   //
   // Example:
   // _.zip(['a','b','c','d'], [1,2,3]) returns [['a',1], ['b',2], ['c',3], ['d',undefined]]
-  _.zip = function() {
+
+  _.zip = function(collections) {
+    var args = [];
+    var zippedArray = [];
+
+    for (var i=0; i < arguments.length; i++) {
+      args.push(arguments[i])
+    };
+
+    var longest= args[0].length;
+
+    for (var longestLength=1; longestLength < arguments.length; longestLength++) {
+      var current = args[longestLength];
+      if (current.length > longest) {
+        longest = current.length;
+      }
+    }
+
+    for (var indx=0; indx < args[0].length; indx++) {
+      var insideZipped = [];
+      insideZipped.push(args[0][indx]);
+      zippedArray.push(insideZipped);
+    }
+
+    var currentElem;
+
+    for (var index=1; index<args.length; index++){ 
+      for (var elemIndex = 0; elemIndex < longest; elemIndex++){ 
+        if (args[elemIndex].length===0) {
+          currentElem = 'undefined';
+        } else {
+          currentElem = args[index][elemIndex];
+        }
+        zippedArray[elemIndex].push(currentElem)
+      }
+    }
+
+    return zippedArray
   };
+
+
 
   // Takes a multidimensional array and converts it to a one-dimensional array.
   // The new array should contain all elements of the multidimensional array.
