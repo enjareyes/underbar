@@ -499,9 +499,10 @@
   _.invoke = function(collection, functionOrKey, args) {
     var results= [];
 
-    // if (typeof functionOrKey === 'string') {
-
-    // };
+    if (typeof functionOrKey === 'string') {
+      var func = window[functionOrKey];
+      console.log(typeof func) // === 'function')
+    };
 
     if (typeof functionOrKey === 'function'){
       for (var index=0; index < collection.length; index++) {
@@ -575,8 +576,25 @@
   // The new array should contain all elements of the multidimensional array.
   //
   // Hint: Use Array.isArray to check if something is an array
+
   _.flatten = function(nestedArray, result) {
+
+    if (result === undefined) {
+      result = []
+    } 
+
+      for (var i = 0; i < nestedArray.length; i++){
+        if (Array.isArray(nestedArray[i])) {
+          _.flatten(nestedArray[i], result);
+        } else {
+          result.push(nestedArray[i]);
+        }
+      }
+
+    return result
   };
+
+
 
   // Takes an arbitrary number of arrays and produces an array that contains
   // every item shared between all the passed-in arrays.
