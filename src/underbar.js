@@ -521,6 +521,7 @@
   // of that string. For example, _.sortBy(people, 'name') should sort
   // an array of people by their name.
   _.sortBy = function(collection, iterator) {
+    console.log(collection)
   };
 
 
@@ -574,7 +575,6 @@
 
   // Takes a multidimensional array and converts it to a one-dimensional array.
   // The new array should contain all elements of the multidimensional array.
-  //
   // Hint: Use Array.isArray to check if something is an array
 
   _.flatten = function(nestedArray, result) {
@@ -598,18 +598,92 @@
 
   // Takes an arbitrary number of arrays and produces an array that contains
   // every item shared between all the passed-in arrays.
-  _.intersection = function() {
+  _.intersection = function(arrays) {
+
+    var args = [];
+    var result = [];
+
+    for (var i=0; i < arguments.length; i++) {
+      args.push(arguments[i]);
+    }
+
+    var compareArray = args[0];
+
+    for (var index=1; index<args.length; index++) {
+      var currentComparatorArray = args[index];
+      for (var ind=0; ind<currentComparatorArray.length; ind++) {
+        if (_.contains(currentComparatorArray, compareArray[ind])) {
+          result.push(compareArray[ind]);
+        }
+      }
+    }
+
+    return result;
   };
+
+
 
   // Take the difference between one array and a number of other arrays.
   // Only the elements present in just the first array will remain.
   _.difference = function(array) {
+    var args = [];
+    var result = [];
+
+    for (var i=0; i < arguments.length; i++) {
+      args.push(arguments[i]);
+    }
+
+    var compareTo = args[0];
+    args.shift();
+    var index = 0;
+    var currentComparatorArray = args[index];
+
+    for (var ind=0; ind<compareTo.length; ind++) {
+      if (!(_.contains(currentComparatorArray, compareTo[ind])) && args.length===1) {
+          result.push(compareTo[ind])
+      } 
+
+      if ((!(_.contains(currentComparatorArray, compareTo[ind])) && args.length > 1)) {
+        if (!(_.contains(args[index+1], compareTo[ind]))) {
+          result.push(compareTo[ind]);
+        }
+      }
+    }
+
+    console.log(result)
+    return result;
+
   };
+
+
+  // _.difference = function(array) {
+  //   var args = [];
+  //   var result = [];
+
+  //   for (var i=0; i < arguments.length; i++) {
+  //     args.push(arguments[i]);
+  //   }
+
+  //   var compareTo= args[0];
+
+  //   for (var index=0; index<args.length; index++) {
+  //     var currentComparatorArray = args[index];
+  //     for (var ind=0; ind<currentComparatorArray.length; ind++) {
+  //       if (!(_.contains(currentComparatorArray, compareTo[ind]))) {
+  //         result.push(compareTo[ind]);
+  //       }
+  //     }
+  //   } //only works with 2 arrays..
+
+  //   return result;
+
+  // };
+
+
 
   // Returns a function, that, when invoked, will only be triggered at most once
   // during a given window of time.  See the Underbar readme for extra details
   // on this function.
-  //
   // Note: This is difficult! It may take a while to implement.
   _.throttle = function(func, wait) {
   };
