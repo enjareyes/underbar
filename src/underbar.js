@@ -499,17 +499,16 @@
   _.invoke = function(collection, functionOrKey, args) {
     var results= [];
 
-    if (typeof functionOrKey === 'string') {
-      var func = window[functionOrKey];
-      console.log(typeof func) // === 'function')
-    };
-
-    if (typeof functionOrKey === 'function'){
       for (var index=0; index < collection.length; index++) {
-        var currentResult = functionOrKey.apply(collection[index])
-        results.push(currentResult);
+        if (typeof functionOrKey === 'function'){
+          var currentResult = functionOrKey.apply(collection[index])
+          results.push(currentResult);
+        }
+        if (typeof functionOrKey === 'string') {
+          var currentResult = collection[index][functionOrKey].apply(collection[index])
+          results.push(currentResult)
+        }
       }
-    }
 
     return results;
   };
@@ -521,7 +520,64 @@
   // of that string. For example, _.sortBy(people, 'name') should sort
   // an array of people by their name.
   _.sortBy = function(collection, iterator) {
-    console.log(collection)
+    // var results = [];
+    // var forUndefined = [];
+    // console.log("************")
+    // console.log(collection)
+    // var array = collection;
+
+    // for (var index = 0; index <= collection.length; index++){
+    //   var currentSmallestElement = array[0];
+
+    //   if (array.length === 1) {
+    //     results.push(currentSmallestElement);
+    //   } else {
+    //     var currentElement = array[index];
+
+    //     if (typeof iterator === 'string') {
+    //       var currentResult = currentElement[iterator];
+    //       var smallest_result = currentSmallestElement[iterator];
+    //       console.log('current result: ' + currentResult);
+    //       console.log('smallest_result: ' + smallest_result)
+
+    //     }
+
+        // if (typeof iterator !== 'string')  {
+        //   if (typeof currentElement !== 'undefined') {
+        //     var currentResult = iterator(currentElement);
+        //     var smallest_result = iterator(currentSmallestElement)
+        //   } 
+        // }
+
+      //   if (currentResult < smallest_result) {
+      //     currentSmallestElement = currentElement;
+      //   } 
+
+      //   //where does three go??
+
+      //   console.log('currentSmallestElement: ' + currentSmallestElement)
+      //   results.push(currentSmallestElement)
+      //   console.log('results: ' + results)
+
+      //   for(var i = 0; i < array.length; i++){
+      //     if(array[i]=== currentSmallestElement){
+      //       console.log("removing: " + array[i])
+      //       array.splice(array[i], 1);
+      //     }
+      //   }
+
+      //   console.log('array: ' + array)
+      //   }  
+      // }
+        
+
+    // for (var undef=0; undef<forUndefined.length; undef++) {
+    //   results.push(forUndefined[undef])
+    // }
+
+    // console.log(results)
+    // return results;
+
   };
 
 
