@@ -395,23 +395,12 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
-
-    var previouslyRun = [];
-    var slice = Array.prototype.slice;
-
-    return function() {
-      var args = slice.call(arguments);
-      var result;
+    var memos = {};
     
-      if (previouslyRun[args]) {
-        return previouslyRun.args;
-      } else {
-        result = func.apply(this, arguments);
-        previouslyRun[args]=result;
-      }
-
-      return result;
-    }
+    return function() {
+      var args = JSON.stringify(arguments);
+      return memos[args] = memos[args] || func.apply(this, arguments);
+    };
 
   };
 
